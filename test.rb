@@ -7,7 +7,8 @@ require_relative 'piece'
 
 board = Board.new
 board.populate
-board[[0,0]] = Piece.new([[0,0]], "C")
-
 d = Display.new(board)
-d.move
+
+board[[4, 4]] = Rook.new([4,4], board)
+p board[[4, 4]].moves
+# d.render

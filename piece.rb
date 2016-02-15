@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Piece
 
   attr_reader :pos, :board
@@ -5,6 +7,7 @@ class Piece
   def initialize(pos, board)
     @pos = pos
     @board = board
+    @value = "P"
   end
 
   def move(pos)
@@ -16,24 +19,40 @@ class Piece
   end
 
   def to_s
-    value
+    @value
   end
 
 end
 
 class SlidingPiece < Piece
 
+
   def move_dirs
     raise "errorrr"
   end
 
   def moves
-    move_dirs.map { |dir| find_moves_in_direction(dir) }.flatten
+    # move_dirs.map { |dir| find_moves_in_direction(dir) }.flatten
+    # p move_dirs
+    final = []
+    s =  move_dirs
+    # [5,6], [5,7]
+    # debugger
+    s.each do |dir|
+      #[5,6]
+      valid = find_moves_in_direction(dir)
+      valid.each do |space|
+        final << space
+      end
+    end
+    final
   end
 
   def find_moves_in_direction(dir)
+    # [[5,6], [5,7], [5,8]]
     result = []
-    return [] unless @board[dir[0]].nil?
+    return dir if dir.empty?
+    return [] if @board[dir[0]]
     result << dir[0]
     result += find_moves_in_direction(dir.drop(1))
   end
@@ -42,12 +61,12 @@ class SlidingPiece < Piece
     horizontal_left = []
     (0...pos[1]).each { |i| horizontal_left << [pos[0], i] }
     horizontal_right = []
-    (pos[1]...8).each { |i| horizontal_right << [pos[0], i] }
+    (pos[1] + 1...8).each { |i| horizontal_right << [pos[0], i] }
     vertical_top = []
     (0...pos[0]).each { |i| vertical_top << [i, pos[1]] }
     vertical_bottom = []
-    (pos[0]...8).each { |i| vertical_bottom << [i, pos[1]] }
-    [horizontal_left, horizontal_right, vertical_top, vertical_bottom]
+    (pos[0] + 1...8).each { |i| vertical_bottom << [i, pos[1]] }
+    [horizontal_left, horizontal_right, vertical_top.reverse, vertical_bottom]
   end
 
   def get_top_diagonals
@@ -68,6 +87,7 @@ class SlidingPiece < Piece
 
   def get_bottom_diagonals
     diagonal_bottom_left = []
+    i = 0
     until pos[0] + i > 8 || pos[1] - i < 0
       diagonal_bottom_left  << [pos[0] + i, pos[1] - i]
       i += 1
@@ -90,8 +110,6 @@ end
 
 class Rook < SlidingPiece
 
-  def initialize
-  end
 
   def move_dirs
     get_horizontals
