@@ -40,14 +40,14 @@ class Display
       render
       move = get_input
     end
-    start = @cursor
+    start = move
 
     move = nil
     until move
       render
       move = get_input
     end
-    end_pos = @cursor
+    end_pos = move
     @board.move(start, end_pos)
     render
   end
