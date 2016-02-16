@@ -2,11 +2,10 @@ require 'byebug'
 
 class Piece
 
-  attr_reader :pos, :board
+  attr_reader :pos, :board, :color
 
-  def initialize(pos, board)
-    @pos = pos
-    @board = board
+  def initialize(pos, board, color)
+    @pos, @board, @color = pos, board, color
     @value = "P"
   end
 
@@ -32,14 +31,9 @@ class SlidingPiece < Piece
   end
 
   def moves
-    # move_dirs.map { |dir| find_moves_in_direction(dir) }.flatten
-    # p move_dirs
     final = []
-    s =  move_dirs
-    # [5,6], [5,7]
-    # debugger
-    s.each do |dir|
-      #[5,6]
+
+    move_dirs.each do |dir|
       valid = find_moves_in_direction(dir)
       valid.each do |space|
         final << space
@@ -49,11 +43,13 @@ class SlidingPiece < Piece
   end
 
   def find_moves_in_direction(dir)
-    # [[5,6], [5,7], [5,8]]
     result = []
     return dir if dir.empty?
-    return [] if @board[dir[0]]
-    result << dir[0]
+    if @board[dir[0]]
+      return (@board[dir[0]].color == color ? [] : [dir[0]])
+    else
+      result << dir[0]
+    end
     result += find_moves_in_direction(dir.drop(1))
   end
 
@@ -71,14 +67,14 @@ class SlidingPiece < Piece
 
   def get_top_diagonals
     diagonal_top_left = []
-    i = 0
+    i = 1
     until pos[0] - i < 0 || pos[1] - i < 0
       diagonal_top_left << [pos[0] - i, pos[1] - i]
       i += 1
     end
     diagonal_top_right = []
-    i = 0
-    until pos[0] - i < 0 || pos[1] + i > 8
+    i = 1
+    until pos[0] - i < 1 || pos[1] + i > 8
       diagonal_top_right << [pos[0] - i, pos[1] + i]
       i += 1
     end
@@ -87,13 +83,13 @@ class SlidingPiece < Piece
 
   def get_bottom_diagonals
     diagonal_bottom_left = []
-    i = 0
+    i = 1
     until pos[0] + i > 8 || pos[1] - i < 0
       diagonal_bottom_left  << [pos[0] + i, pos[1] - i]
       i += 1
     end
     diagonal_bottom_right = []
-    i = 0
+    i = 1
     until pos[0] + i > 8 || pos[1] + i > 8
       diagonal_bottom_right << [pos[0] + i, pos[1] + i]
       i += 1
@@ -105,6 +101,12 @@ end
 
 
 class SteppingPiece < Piece
+
+  def moves
+    moves_when_empty.reject do |space|
+      @board[space] && @board[space].color == color
+    end
+  end
 
 end
 
@@ -127,8 +129,38 @@ end
 
 class Queen < SlidingPiece
 
-    def move_dirs
-      get_horizontals + get_top_diagonals + get_bottom_diagonals
-    end
+  def move_dirs
+    get_horizontals + get_top_diagonals + get_bottom_diagonals
+  end
 
+end
+
+class King < SteppingPiece
+
+  DELTAS = [[1,0], [1,1], [-1,0], [-1,-1], [1,-1], [-1,1], [0,1], [0,-1]]
+
+  def moves_when_empty
+    result = DELTAS.map { |delta| [pos[0]+delta[0], pos[1]+delta[1]] }
+    result
+  end
+
+end
+
+class Knight < SteppingPiece
+
+  DELTAS = [
+    [-2, -1],
+    [-2,  1],
+    [-1, -2],
+    [-1,  2],
+    [ 1, -2],
+    [ 1,  2],
+    [ 2, -1],
+    [ 2,  1]
+  ]
+
+  def moves_when_empty
+    result = DELTAS.map { |delta| [pos[0]+delta[0], pos[1]+delta[1]] }
+    result
+  end
 end

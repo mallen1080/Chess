@@ -7,16 +7,16 @@ class Board
 
   def populate
     @grid[0].each_index do |i|
-      @grid[0][i] = Piece.new([0,i], self)
+      @grid[0][i] = Piece.new([0,i], self, :black)
     end
     @grid[1].each_index do |i|
-      @grid[1][i] = Piece.new([1,i], self)
+      @grid[1][i] = Piece.new([1,i], self, :black)
     end
     @grid[-2].each_index do |i|
-      @grid[-2][i] = Piece.new([-2,i], self)
+      @grid[-2][i] = Piece.new([-2,i], self, :white)
     end
     @grid[-1].each_index do |i|
-      @grid[-1][i] = Piece.new([-1,i], self)
+      @grid[-1][i] = Piece.new([-1,i], self, :white)
     end
   end
 

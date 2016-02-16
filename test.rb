@@ -9,6 +9,7 @@ board = Board.new
 board.populate
 d = Display.new(board)
 
-board[[4, 4]] = Rook.new([4,4], board)
-p board[[4, 4]].moves
-# d.render
+board[[4, 4]] = Queen.new([4,4], board, :white)
+# p board[[4, 4]].moves
+# p board[[4, 4]].moves.count
+p board[[4,4]].moves
