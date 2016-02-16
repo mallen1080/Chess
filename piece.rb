@@ -164,3 +164,26 @@ class Knight < SteppingPiece
     result
   end
 end
+
+class Pawn < Piece
+  attr_accessor :start
+
+  def initialize(pos, board, color)
+    super(pos, board, color)
+    @start = true
+  end
+
+  def moves
+    result = []
+    forward = color == :black ? [pos[0] + 1, pos[1]] : [pos[0] - 1, pos[1]]
+    left_diagonal = color == :black ? [pos[0] + 1, pos[1] - 1] : [pos[0] - 1, pos[1] + 1]
+    right_diagonal = color == :black ? [pos[0] + 1, pos[1] + 1] : [pos[0] - 1, pos[1] - 1]
+    result << (color == :black ? [pos[0] + 2, pos[1]] : [pos[0] - 2, pos[1]]) if start
+    result << forward if @board[forward].nil?
+    result << left_diagonal if @board[left_diagonal] && @board[left_diagonal].color == color
+    result << right_diagonal if @board[right_diagonal] && @board[right_diagonal].color == color
+    result
+  end
+
+
+end

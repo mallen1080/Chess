@@ -9,7 +9,7 @@ board = Board.new
 board.populate
 d = Display.new(board)
 
-board[[4, 4]] = Knight.new([4,4], board, :white)
+board[[4, 4]] = Pawn.new([4,4], board, :white)
 # p board[[4, 4]].moves
 # p board[[4, 4]].moves.count
 p board[[4,4]].moves
