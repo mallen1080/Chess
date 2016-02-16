@@ -11,7 +11,7 @@ class Display
   end
 
   def build_grid
-    @board.grid.map.with_index do |row, i|
+    board.grid.map.with_index do |row, i|
       build_row(row, i)
     end
   end
@@ -25,35 +25,44 @@ class Display
 
   def colors_for(i, j)
     if [i, j] == @cursor
-      bg = :white
+      bg = :green
     elsif (i + j).odd?
       bg = :light_blue
     else
-      bg = :light_green
+      bg = :red
     end
     { background: bg, color: :white }
   end
 
   def move
-    move = nil
-    until move
-      render
-      move = get_input
-    end
-    start = move
+    begin
+      move = nil
+      until move
+        render
+        move = get_input
+      end
+      start = move
 
-    move = nil
-    until move
-      render
-      move = get_input
+      move = nil
+      until move
+        render
+        move = get_input
+      end
+      end_pos = move
+      board.move(start, end_pos)
+    rescue ChessError => e
+      puts e.message
+      retry
     end
-    end_pos = move
-    @board.move(start, end_pos)
+
     render
+
+    # @board.undo(start, end_pos, piece)
+    # render
   end
 
   def render
-    # system("clear")
+    system("clear")
     build_grid.each { |row| puts "#{row.join("   ")} \n\n" }
   end
 
