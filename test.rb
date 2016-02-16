@@ -20,6 +20,6 @@ require_relative 'piece'
 # p board.in_check?(:black)
 # p board[[6,0]].board
 
-d = Display.new(board)
-g = Game.new(d)
+# d = Display.new(board)
+g = Game.new
 g.play

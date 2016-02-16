@@ -2,16 +2,17 @@ class Game
 
   attr_reader :display
 
-  def initialize(display)
-    @display = display
-  end
-
-  def board
-    @display.board
+  def initialize
+    @display = Display.new(Board.new)
   end
 
   def setup
-    board.populate
+    @display.board.populate
+    # @display.board[[0,0]] = King.new([0,0], @display.board, :white)
+    # @display.board[[6,2]] = Queen.new([6,2], @display.board, :white)
+    # @display.board[[4,4]] = Rook.new([4,4], @display.board, :white)
+    # @display.board[[7,0]] = King.new([7,0], @display.board, :black)
+    # @display.board[[0,7]] = Pawn.new([0,7], @display.board, :black)
     puts "Welcome to Chess!"
   end
 
@@ -19,9 +20,9 @@ class Game
     setup
     loop do
       play_turn(:white)
-      break if board.checkmate?(:black)
+      break if @display.board.checkmate?(:black)
       play_turn(:black)
-      break if board.checkmate?(:white)
+      break if @display.board.checkmate?(:white)
     end
     puts "DONE"
   end
@@ -30,10 +31,9 @@ class Game
     begin
       #select piece
       move = nil
-      until move
+      until move && @display.board[move].color == color
         @display.render
         move = @display.get_input
-        move = nil unless board[move].color == color
       end
       start = move
       #make move
@@ -43,7 +43,7 @@ class Game
         move = @display.get_input
       end
       end_pos = move
-      board.move(start, end_pos)
+      @display.board.move(start, end_pos)
     rescue ChessError => e
       puts e.message
       retry

@@ -4,7 +4,7 @@ require_relative "error"
 class Board
   attr_reader :grid
 
-  def initialize()
+  def initialize
     @grid = Array.new(8) { Array.new(8) }
   end
 
@@ -28,9 +28,9 @@ class Board
         @grid[row_num][i] = Knight.new([row_num,i], self, color)
       when 2, 5
         @grid[row_num][i] = Bishop.new([row_num,i], self, color)
-      when 4
-        @grid[row_num][i] = Queen.new([row_num,i], self, color)
       when 3
+        @grid[row_num][i] = Queen.new([row_num,i], self, color)
+      when 4
         @grid[row_num][i] = King.new([row_num,i], self, color)
       end
     end
@@ -50,10 +50,10 @@ class Board
   def in_check?(color)
     @grid.flatten(1).each do |piece|
       next if piece.nil? || piece.color == color
-      # p "Piece = #{piece.pos}"
+      # p piece.possible_moves
       # debugger if piece.pos == [7, 0]
       piece.possible_moves.each do |move|
-        # p "Poss. Move = #{move}"
+        # p self[move].class
         return true if (self[move].class == King && self[move].color == color)
       end
     end
@@ -64,15 +64,22 @@ class Board
     return false unless in_check?(color)
     @grid.flatten(1).each do |piece|
       next if piece.nil? || piece.color != color
-      return false unless piece.valid_moves.empty?
+
+      piece.possible_moves.each do |move|
+
+        return false if piece.valid_move?(move)
+      end
     end
-    # puts "Congratulations, #{color == :black ? :white : :black}"
-    true
+    puts "Congratulations, #{color == :black ? :white : :black}!"
+    return true
   end
 
   def undo(start_pos, end_pos, piece_at_end)
     move_to(end_pos, start_pos)
-    self[end_pos] = piece_at_end if piece_at_end
+    if piece_at_end
+      self[end_pos] = piece_at_end
+      piece_at_end.move(end_pos)
+    end
   end
 
   def move_to(start, end_pos)
@@ -90,5 +97,6 @@ class Board
   def move(start, end_pos)
     raise ChessError.new ("Invalid move") unless self[start].valid_move?(end_pos)
     move_to(start, end_pos)
+    self[end_pos].start = false if self[end_pos].class == Pawn
   end
 end
