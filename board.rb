@@ -66,6 +66,7 @@ class Board
       next if piece.nil? || piece.color != color
       return false unless piece.valid_moves.empty?
     end
+    # puts "Congratulations, #{color == :black ? :white : :black}"
     true
   end
 

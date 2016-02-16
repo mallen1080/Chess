@@ -34,32 +34,32 @@ class Display
     { background: bg, color: :white }
   end
 
-  def move
-    begin
-      move = nil
-      until move
-        render
-        move = get_input
-      end
-      start = move
-
-      move = nil
-      until move
-        render
-        move = get_input
-      end
-      end_pos = move
-      board.move(start, end_pos)
-    rescue ChessError => e
-      puts e.message
-      retry
-    end
-
-    render
-
-    # @board.undo(start, end_pos, piece)
-    # render
-  end
+  # def move
+  #   begin
+  #     move = nil
+  #     until move
+  #       render
+  #       move = get_input
+  #     end
+  #     start = move
+  #
+  #     move = nil
+  #     until move
+  #       render
+  #       move = get_input
+  #     end
+  #     end_pos = move
+  #     board.move(start, end_pos)
+  #   rescue ChessError => e
+  #     puts e.message
+  #     retry
+  #   end
+  #
+  #   render
+  #
+  #   # @board.undo(start, end_pos, piece)
+  #   # render
+  # end
 
   def render
     system("clear")
