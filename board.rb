@@ -1,6 +1,3 @@
-require 'byebug'
-require_relative "error"
-
 class Board
   attr_reader :grid
 
@@ -50,11 +47,10 @@ class Board
   def in_check?(color)
     @grid.flatten(1).each do |piece|
       next if piece.nil? || piece.color == color
-      # p piece.possible_moves
-      # debugger if piece.pos == [7, 0]
       piece.possible_moves.each do |move|
-        # p self[move].class
-        return true if (self[move].class == King && self[move].color == color)
+        if (self[move].class == King && self[move].color == color)
+          return true
+        end
       end
     end
     false
@@ -64,9 +60,7 @@ class Board
     return false unless in_check?(color)
     @grid.flatten(1).each do |piece|
       next if piece.nil? || piece.color != color
-
       piece.possible_moves.each do |move|
-
         return false if piece.valid_move?(move)
       end
     end
@@ -82,15 +76,9 @@ class Board
     end
   end
 
-  def move_to(start, end_pos)
-    self[end_pos] = self[start]
-    self[start].move(end_pos)
-    self[start] = nil
-  end
-
   def in_bounds?(pos)
     x, y = pos
-    return false if !(0...8).include?(x) || !(0...8).include?(y)
+    return false unless (0...8).include?(x) && (0...8).include?(y)
     true
   end
 
@@ -99,4 +87,13 @@ class Board
     move_to(start, end_pos)
     self[end_pos].start = false if self[end_pos].class == Pawn
   end
+
+  def move_to(start, end_pos)
+    self[end_pos] = self[start]
+    self[start].move(end_pos)
+    self[start] = nil
+  end
+end
+
+class ChessError < StandardError
 end

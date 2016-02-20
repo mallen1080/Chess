@@ -6,28 +6,21 @@ class Piece
 
   def initialize(pos, board, color)
     @pos, @board, @color = pos, board, color
-
   end
 
   def move(pos)
     @pos = pos
   end
 
-  def possible_moves
-    raise "error"
-  end
-
   def valid_move?(end_position)
-    result = true
+    valid = true
     return false unless possible_moves.include?(end_position)
     piece = board[end_position]
-    # p piece
     start = pos
-    board.move_to(pos, end_position)
-    result = false if board.in_check?(color)
+    board.move_to(start, end_position)
+    valid = false if board.in_check?(color)
     board.undo(start, end_position, piece)
-    # p piece
-    result
+    valid
   end
 
   def inspect
@@ -37,11 +30,6 @@ class Piece
 end
 
 class SlidingPiece < Piece
-
-
-  def move_dirs
-    raise "errorrr"
-  end
 
   def possible_moves
     final = []
@@ -75,7 +63,8 @@ class SlidingPiece < Piece
     (0...pos[0]).each { |i| vertical_top << [i, pos[1]] }
     vertical_bottom = []
     (pos[0] + 1...8).each { |i| vertical_bottom << [i, pos[1]] }
-    [horizontal_left, horizontal_right, vertical_top.reverse, vertical_bottom]
+    [horizontal_left, horizontal_right,
+      vertical_top.reverse, vertical_bottom]
   end
 
   def get_top_diagonals
@@ -109,7 +98,6 @@ class SlidingPiece < Piece
     end
     [diagonal_bottom_left, diagonal_bottom_right]
   end
-
 end
 
 
@@ -120,18 +108,17 @@ class SteppingPiece < Piece
       @board[space] && @board[space].color == color
     end
   end
-
 end
 
 class Rook < SlidingPiece
-
 
   def move_dirs
     get_horizontals
   end
 
   def to_s
-    " R "
+    return " ♜ " if color == :black
+    return " ♖ " if color == :white
   end
 
 end
@@ -144,7 +131,8 @@ class Bishop < SlidingPiece
   end
 
   def to_s
-    " B "
+    return " ♝ " if color == :black
+    return " ♗ " if color == :white
   end
 
 end
@@ -156,14 +144,22 @@ class Queen < SlidingPiece
   end
 
   def to_s
-    " Q "
+    return " ♛ " if color == :black
+    return " ♕ " if color == :white
   end
 
 end
 
 class King < SteppingPiece
 
-  DELTAS = [[1,0], [1,1], [-1,0], [-1,-1], [1,-1], [-1,1], [0,1], [0,-1]]
+  DELTAS = [[1,0],
+            [1,1],
+            [-1,0],
+            [-1,-1],
+            [1,-1],
+            [-1,1],
+            [0,1],
+            [0,-1]]
 
   def moves_when_empty
     result = DELTAS.map { |delta| [pos[0]+delta[0], pos[1]+delta[1]] }
@@ -172,23 +168,22 @@ class King < SteppingPiece
   end
 
   def to_s
-    " K "
+    return " ♚ " if color == :black
+    return " ♔ " if color == :white
   end
 
 end
 
 class Knight < SteppingPiece
 
-  DELTAS = [
-    [-2, -1],
-    [-2,  1],
-    [-1, -2],
-    [-1,  2],
-    [ 1, -2],
-    [ 1,  2],
-    [ 2, -1],
-    [ 2,  1]
-  ]
+  DELTAS = [[-2, -1],
+            [-2,  1],
+            [-1, -2],
+            [-1,  2],
+            [ 1, -2],
+            [ 1,  2],
+            [ 2, -1],
+            [ 2,  1]]
 
   def moves_when_empty
     result = DELTAS.map do |delta|
@@ -199,7 +194,8 @@ class Knight < SteppingPiece
   end
 
   def to_s
-    " N "
+    return " ♞ " if color == :black
+    return " ♘ " if color == :white
   end
 
 end
@@ -222,20 +218,22 @@ class Pawn < Piece
     result << forward if @board[forward].nil?
     result << left_diagonal if @board[left_diagonal] && @board[left_diagonal].color != color
     result << right_diagonal if @board[right_diagonal] && @board[right_diagonal].color != color
-    result.select! { |move| board.in_bounds?(move) }
-    result
+    result.select { |move| board.in_bounds?(move) }
   end
 
   def to_s
-    " P "
+    return " ♟ " if color == :black
+    return " ♙ " if color == :white
   end
-
-
 end
 
 class NilClass
 
   def to_s
     "   "
+  end
+
+  def color
+    nil
   end
 end
