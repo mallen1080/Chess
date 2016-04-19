@@ -33,7 +33,6 @@ class Board
     end
   end
 
-
   def [](pos)
     x, y = pos
     @grid[x][y]
