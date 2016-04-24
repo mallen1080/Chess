@@ -5,5 +5,4 @@ require_relative 'game'
 require_relative 'pieces'
 
 
-g = Game.new
-g.play
+Game.new.play

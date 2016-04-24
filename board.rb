@@ -17,19 +17,9 @@ class Board
   end
 
   def populate_back_row(row_num, color)
-    @grid[row_num].each_index do |i|
-      case i
-      when 0, 7
-        @grid[row_num][i] = Rook.new([row_num,i], self, color)
-      when 1, 6
-        @grid[row_num][i] = Knight.new([row_num,i], self, color)
-      when 2, 5
-        @grid[row_num][i] = Bishop.new([row_num,i], self, color)
-      when 3
-        @grid[row_num][i] = Queen.new([row_num,i], self, color)
-      when 4
-        @grid[row_num][i] = King.new([row_num,i], self, color)
-      end
+    pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
+    pieces.each_with_index do |piece, i|
+      @grid[row_num][i] = piece.new([row_num, i], self, color)
     end
   end
 
