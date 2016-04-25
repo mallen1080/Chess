@@ -3,7 +3,7 @@ require_relative 'stepable'
 
 class King < Piece
   include Stepable
-  
+
   DELTAS = [[1,0],
             [1,1],
             [-1,0],
@@ -20,8 +20,7 @@ class King < Piece
   end
 
   def to_s
-    return " ♚ " if color == :black
-    return " ♔ " if color == :white
+    " ♚ ".colorize(color)
   end
 
 end

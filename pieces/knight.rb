@@ -22,7 +22,7 @@ class Knight < Piece
   end
 
   def to_s
-    return color == :black ? " ♞ " : " ♘ "
+    " ♞ ".colorize(color)
   end
 
 end

@@ -38,6 +38,6 @@ private
     else
       bg = :yellow
     end
-    { background: bg, color: :black }
+    { background: bg }
   end
 end

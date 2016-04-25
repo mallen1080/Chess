@@ -22,7 +22,6 @@ class Pawn < Piece
   end
 
   def to_s
-    return " ♟ " if color == :black
-    return " ♙ " if color == :white
+    " ♟ ".colorize(color)
   end
 end
