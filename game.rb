@@ -28,13 +28,16 @@ class Game
     move = nil
     until move && @board[move].color == color
       @display.render
+      puts "#{color.capitalize}'s turn.  Select piece to move."
       move = @display.get_input
     end
 
     start = move
+    piece = @board[move].class
     move = nil
     until move
       @display.render
+      puts "#{piece} selected. Select where to move to."
       move = @display.get_input
     end
 
