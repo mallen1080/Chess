@@ -5,4 +5,4 @@ To play command-line chess, clone this repo and inside the directory run the com
 
 ![ss]
 
-[ss]: ./image/ss.png
+[ss]: ./Image/ss.png
